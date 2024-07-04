@@ -7,8 +7,6 @@ class UserProfile(models.Model):
         ('arrendador', 'Arrendador'),
         ('arrendatario', 'Arrendatario'),
     )
-    nombre = models.CharField(max_length=50, blank=False)
-    apellido = models.CharField(max_length=50, blank=False)
     rut = models.CharField(max_length=12, blank=False)
     direccion = models.CharField(max_length=255, blank=False)
     telefono_personal = models.CharField(max_length=20, blank=False)
