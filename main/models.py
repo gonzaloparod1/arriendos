@@ -11,7 +11,11 @@ class UserProfile(models.Model):
     direccion = models.CharField(max_length=255, blank=False)
     telefono_personal = models.CharField(max_length=20, blank=False)
     user_type = models.CharField(max_length=20, choices=tipo_de_usuario)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User, 
+        related_name='userprofile', 
+        on_delete=models.CASCADE
+    )
     
     def __str__(self):
         nombre = self.user.first_name
