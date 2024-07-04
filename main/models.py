@@ -14,8 +14,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     
     def __str__(self):
-        nombre = self.nombre
-        apellido = self.apellido
+        nombre = self.user.first_name
+        apellido = self.user.last_name
         usuario = self.user.username
         tipo_usuario = self.tipo_de_usuario
         return f'{nombre} {apellido} | {usuario} | {tipo_usuario}'
