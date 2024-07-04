@@ -17,7 +17,7 @@ class UserProfile(models.Model):
         nombre = self.user.first_name
         apellido = self.user.last_name
         usuario = self.user.username
-        tipo_usuario = self.tipo_de_usuario
+        tipo_usuario = self.user_type
         return f'{nombre} {apellido} | {usuario} | {tipo_usuario}'
 
 
