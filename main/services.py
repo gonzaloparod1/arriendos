@@ -26,5 +26,6 @@ def crear_user(rut:str, first_name:str, last_name:str, email:str, password:str, 
 def editar_user(*args):
     pass
 
-def eliminar_user(user_id):
-    pass
+def eliminar_user(rut:str):
+    eliminar = User.objects.get(username=rut)
+    eliminar.delete()
