@@ -1,16 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 class UserProfile(models.Model):
-    tipo_de_usuario = (
-        ('arrendador', 'Arrendador'),
-        ('arrendatario', 'Arrendatario'),
-    )
-    rut = models.CharField(max_length=12, blank=False)
     direccion = models.CharField(max_length=255, blank=False)
     telefono_personal = models.CharField(max_length=20, blank=False)
-    user_type = models.CharField(max_length=20, choices=tipo_de_usuario)
     user = models.OneToOneField(
         User, 
         related_name='userprofile', 
@@ -21,9 +16,12 @@ class UserProfile(models.Model):
         nombre = self.user.first_name
         apellido = self.user.last_name
         usuario = self.user.username
-        tipo_usuario = self.user_type
-        return f'{nombre} {apellido} | {usuario} | {tipo_usuario}'
+        return f'{nombre} {apellido} | {usuario}'
 
+# class Region: Pendiente
+
+class Comuna(models.Model):
+    nombre = models.CharField(max_length=255)
 
 class Inmueble(models.Model):
     inmuebles = (
@@ -32,19 +30,47 @@ class Inmueble(models.Model):
         ('parcela', 'Parcela')
     )
     nombre = models.CharField(max_length=50)
-    descripcion = models.TextField(max_length=500)
-    m2_construidos = models.IntegerField()
-    m2_totales = models.IntegerField() # o del terrerno
-    cant_estacionamientos = models.IntegerField()
-    cant_habitaciones = models.IntegerField()
-    cant_banos = models.IntegerField()
+    descripcion = models.TextField(max_length=1500)
+    m2_construidos = models.IntegerField(validators=[MinValueValidator(1)])
+    m2_totales = models.IntegerField(validators=[MinValueValidator(1)]) # o del terrerno
+    num_estacionamientos = models.IntegerField(validators=[MinValueValidator(0)], default=0)
+    num_habitaciones = models.IntegerField(validators=[MinValueValidator(1)], default=1)
+    num_baños = models.IntegerField(validators=[MinValueValidator(0)], default=0)
     direccion = models.CharField(max_length=255)
-    comuna = models.CharField(max_length=50)
-    precio_mensual_arriendo = models.IntegerField()
+    precio_mensual_arriendo = models.IntegerField(validators=[MinValueValidator(1000)])
     tipo_de_inmueble = models.CharField(max_length=20, choices=inmuebles)
+    comuna = models.ForeignKey(
+        Comuna,
+        related_name='inmuebles',
+        on_delete=models.RESTRICT
+    )
+    propietario = models.ForeignKey(
+        User,
+        related_name='inmueble',
+        on_delete=models.RESTRICT
+    )
 
     def __str__(self):
         nombre = self.nombre
         comuna = self.comuna
         tipo_inmueble = self.tipo_de_inmueble
         return f'{nombre} {comuna} | {tipo_inmueble}'
+
+class Solicitud(models.Model):
+    estados = (
+        ('pendiente', 'Pendiente'),
+        ('rezachaza', 'Rechazada'),
+        ('aprobada', 'Aprobada')
+    )
+    inmueble =  models.ForeignKey(
+        Inmueble,
+        related_name='solicitudes',
+        on_delete=models.CASCADE
+    )
+    arrendador = models.ForeignKey(
+        User,
+        related_name='solicitudes',
+        on_delete=models.CASCADE 
+    )
+    fecha = models.DateTimeField(auto_now_add=True)
+    estado = models.CharField(max_length=50, choices=estados)
