@@ -22,6 +22,9 @@ class UserProfile(models.Model):
 
 class Comuna(models.Model):
     nombre = models.CharField(max_length=255)
+    def __str__(self):
+        nombre = self.nombre
+        return f'{nombre}'
 
 class Inmueble(models.Model):
     inmuebles = (
