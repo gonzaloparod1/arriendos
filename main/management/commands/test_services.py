@@ -5,4 +5,5 @@ from main.services import *
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        pass
+        #crear_user('44.444.444-4', 'Cuatro', 'Jor', 'ccc@bbb.ccc', '123456', '123456', 'Pasaje Nueve, Chile')
+        editar_user('44.444.444-4', 'Cuatro', 'Jordan', 'ccc@bbb.ccc', '654321', '654321', 'Street One, Usa', '987654321')
