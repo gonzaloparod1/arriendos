@@ -18,10 +18,18 @@ class UserProfile(models.Model):
         usuario = self.user.username
         return f'{nombre} {apellido} | {usuario}'
 
-# class Region: Pendiente
+class Region(models.Model):
+    cod = models.CharField(max_length=5, primary_key=True)
+    nombre = models.CharField(max_length=255)
 
 class Comuna(models.Model):
+    cod = models.CharField(max_length=5, primary_key=True)
     nombre = models.CharField(max_length=255)
+    region = models.ForeignKey(
+        Region,
+        on_delete=models.RESTRICT,
+        related_name='comunas'
+    )
     def __str__(self):
         nombre = self.nombre
         return f'{nombre}'
