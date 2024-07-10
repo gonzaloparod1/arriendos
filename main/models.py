@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator
 # Create your models here.
 class UserProfile(models.Model):
     direccion = models.CharField(max_length=255, blank=False)
-    telefono_personal = models.CharField(max_length=20, blank=False)
+    telefono_personal = models.CharField(max_length=20, null=True)
     user = models.OneToOneField(
         User, 
         related_name='userprofile', 
