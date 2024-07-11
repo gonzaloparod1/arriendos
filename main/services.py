@@ -2,8 +2,8 @@ from main.models import UserProfile, Inmueble, Comuna
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 
-def crear_inmueble(nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna:str, rut_propietario:str):
-    comuna = Comuna.objects.get(nombre=comuna)
+def crear_inmueble(nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna_cod:str, rut_propietario:str):
+    comuna = Comuna.objects.get(cod=comuna_cod)
     propietario = User.objects.get(username=rut_propietario)
     Inmueble.objects.create(
         nombre = nombre,
