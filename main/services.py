@@ -80,3 +80,10 @@ def editar_user(username:str, first_name:str, last_name:str, email:str, password
 def eliminar_user(rut:str):
     eliminar = User.objects.get(username=rut)
     eliminar.delete()
+
+def obtener_propiedades_comunas(filtro):
+    inmuebles = []
+    if filtro is None:
+        return Inmueble.objects.all().order_by('comuna') # Entrega un objeto, al poner .value() entrega un diccionario
+    # Si llegamos, hay un filtro
+    return Inmueble.objects.filter(nombre__icontains=filtro).order_by('comuna')
