@@ -1,6 +1,8 @@
 from main.models import UserProfile, Inmueble, Comuna
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
+from django.db import connection
+from django.db.models import Q
 
 def crear_inmueble(nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna_cod:str, rut_propietario:str):
     comuna = Comuna.objects.get(cod=comuna_cod)
@@ -82,8 +84,26 @@ def eliminar_user(rut:str):
     eliminar.delete()
 
 def obtener_propiedades_comunas(filtro):
-    inmuebles = []
-    if filtro is None:
+    if filtro is None:  
         return Inmueble.objects.all().order_by('comuna') # Entrega un objeto, al poner .value() entrega un diccionario
     # Si llegamos, hay un filtro
-    return Inmueble.objects.filter(nombre__icontains=filtro).order_by('comuna')
+    return Inmueble.objects.filter(Q(nombre__icontains=filtro) | Q(descripcion__icontains=filtro) ).order_by('comuna')
+
+def obtener_propiedades_regiones(filtro):
+    consulta = '''
+    select I.nombre, I.descripcion, R.nombre as region from main_inmueble as I
+    join main_comuna as C on I.comuna_id = C.cod
+    join main_region as R on C.region_id = R.cod
+    order by R.cod;
+    '''
+    if filtro is not None:
+        consulta = f'''
+        select I.nombre, I.descripcion, R.nombre as region from main_inmueble as I
+        join main_comuna as C on I.comuna_id = C.cod
+        join main_region as R on C.region_id = R.cod where I.nombre like '%{filtro}%' or I.descripcion like '%{filtro}%'
+        order by R.cod;
+        '''
+    cursor = connection.cursor()
+    cursor.execute(consulta)
+    registros = cursor.fetchall() # LAZY LOADING
+    return registros

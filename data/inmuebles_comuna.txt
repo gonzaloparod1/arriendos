@@ -1,21 +1,3 @@
-Casa Acogedora	Amplia casa con jardín		Iquique
-Departamento Moderno	Departamento céntrico con vista al mar		Caldera
-Casa de Playa	Casa frente al mar		Coquimbo
-Loft Urbano	Loft en el corazón de la ciudad		Ovalle
 Apartamento Elegante	Apartamento con acabados de lujo		Valparaíso
-Casa Familiar	Amplia casa para toda la familia		Viña del Mar
-Estudio Acogedor	Estudio ideal para solteros		La Ligua
-Penthouse con Vistas	Penthouse con terraza panorámica		Papudo
-Casa Rústica	Casa de campo con chimenea		San Felipe
-Casa Grande blanca en Villa Alemana	Hermosa casa de equina con gran patio		Villa Alemana
-Apartamento Minimalista	Apartamento con diseño minimalista		Villa Alemana
-Casa Tranquila	Casa en zona residencial		La Estrella
-Departamento Céntrico	Departamento cerca de comercios		Chimbarongo
-Casa de Campo	Casa con amplio terreno		Talca
-Loft Industrial	Loft con estilo industrial		Molina
-Apartamento Luminoso	Apartamento con mucha luz natural		Colbún
-Casa Moderna	Casa minimalista con piscina		Coronel
-Penthouse de Lujo	Penthouse con vistas panorámicas		Yumbel
-Estudio Urbano	Estudio en el corazón de la ciudad		Pucón
-Casa Familiar Grande	Casa espaciosa para toda la familia		Lumaco
+Penthouse de Lujo	Elegante Penthouse con vista al mar		Yumbel
 Apartamento Elegante II	Apartamento con acabados de lujo		Osorno
