@@ -108,3 +108,35 @@ def obtener_propiedades_regiones(filtro):
     cursor.execute(consulta)
     registros = cursor.fetchall() # LAZY LOADING
     return registros
+
+'''
+from django.db.models import F, Q
+
+def obtener_propiedades_regiones(filtro=None):
+    # Construye la consulta base
+    inmuebles = Inmueble.objects.select_related('comuna__region').annotate(
+        region_nombre=F('comuna__region__nombre')
+    ).order_by('comuna__region__cod')
+
+    # Aplica el filtro si se proporciona
+    if filtro:
+        filtro = filtro.lower()
+        inmuebles = inmuebles.filter(
+            Q(nombre__icontains=filtro) | Q(descripcion__icontains=filtro)
+        )
+
+    return inmuebles
+
+# Explicación:
+# select_related: Usa select_related para hacer un join implícito con los modelos relacionados (Comuna y Region). 
+# Esto optimiza la consulta reduciendo el número de consultas a la base de datos.
+# annotate: Añade un campo anotado region_nombre que contiene el nombre de la región.
+# order_by: Ordena los resultados por el código de la región.
+# Filtro: Si se proporciona un filtro, se usa el método filter con Q para buscar coincidencias
+# en el nombre o la descripción, usando icontains para una búsqueda insensible a mayúsculas y minúsculas.
+
+# Uso
+# propiedades = obtener_propiedades_regiones(filtro="casa")
+# for propiedad in propiedades:
+#     print(propiedad.nombre, propiedad.descripcion, propiedad.region_nombre)
+'''
