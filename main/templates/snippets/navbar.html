@@ -19,6 +19,9 @@
 					</li>
 					{% if user.is_authenticated %}
 						<li class="nav-item">
+							<a class="nav-link text-light" href="{% url 'profile' %}">Mis Datos</a>
+						</li>
+						<li class="nav-item">
 							<form action="{% url 'logout' %}" method="post">
 								{% csrf_token %}
 								<button class="nav-link fw-bold text-danger" type="submit">Log Out</button>
