@@ -84,6 +84,7 @@ def editar_user_sin_password(username:str, first_name:str, last_name:str, email:
     user.first_name = first_name
     user.last_name = last_name
     user.email = email
+    user.save()
     user_profile = UserProfile.objects.get(user=user)
     user_profile.direccion = direccion
     user_profile.telefono_personal = telefono
