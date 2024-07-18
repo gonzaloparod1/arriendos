@@ -3,7 +3,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import messages
-from main.services import editar_user_sin_password
+from main.services import editar_user_sin_password, cambio_password
 
 # Create your views here.
 def index(request):
@@ -33,3 +33,9 @@ def profile(request):
             return redirect('/accounts/profile')
     else:
         return render(request, 'profile.html')
+
+def change_pass(request):
+    password = request.POST['password']
+    password_repeat = request.POST['password_repeat']
+    cambio_password(request, password, password_repeat)
+    return redirect('/accounts/profile')

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from django.db import connection
 from django.db.models import Q
+from django.contrib import messages
 
 def crear_inmueble(nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna_cod:str, rut_propietario:str):
     comuna = Comuna.objects.get(cod=comuna_cod)
@@ -119,6 +120,14 @@ def obtener_propiedades_regiones(filtro):
     cursor.execute(consulta)
     registros = cursor.fetchall() # LAZY LOADING
     return registros
+
+def cambio_password(request, password:str, password_repeat:str):
+    if password != password_repeat:
+        messages.warning(request, 'Las contraseñas no coinciden')
+        return
+    request.user.set_password(password)
+    request.user.save()
+    messages.success(request, 'Contraseña actualizada exitosamente')
 
 '''
 from django.db.models import F, Q
