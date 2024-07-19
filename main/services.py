@@ -80,7 +80,7 @@ def editar_user(username:str, first_name:str, last_name:str, email:str, password
     user_profile.telefono_personal = telefono
     user_profile.save()
 
-def editar_user_sin_password(username:str, first_name:str, last_name:str, email:str, direccion:str, telefono:str=None):
+def editar_user_sin_password(username:str, first_name:str, last_name:str, email:str, direccion:str, rol:str, telefono:str=None):
     user = User.objects.get(username=username)
     user.first_name = first_name
     user.last_name = last_name
@@ -89,6 +89,7 @@ def editar_user_sin_password(username:str, first_name:str, last_name:str, email:
     user_profile = UserProfile.objects.get(user=user)
     user_profile.direccion = direccion
     user_profile.telefono_personal = telefono
+    user_profile.rol = rol
     user_profile.save()
 
 def eliminar_user(rut:str):

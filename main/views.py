@@ -19,7 +19,8 @@ def profile(request):
             email = request.POST['email']
             direccion = request.POST['direccion']
             telefono = request.POST['telefono']
-            editar_user_sin_password(username, first_name, last_name, email, direccion, telefono)
+            rol = request.POST['rol']
+            editar_user_sin_password(username, first_name, last_name, email, direccion, rol, telefono)
             messages.success(request, 'Ha actualizado sus datos con exito')
             return redirect('/accounts/profile')
         else:
@@ -28,7 +29,8 @@ def profile(request):
             last_name = request.POST['last_name']
             email = request.POST['email']
             direccion = request.POST['direccion']
-            editar_user_sin_password(username, first_name, last_name, email, direccion)
+            rol = request.POST['rol']
+            editar_user_sin_password(username, first_name, last_name, email, rol, direccion)
             messages.success(request, 'Ha actualizado sus datos con exito sin telefono')
             return redirect('/accounts/profile')
     else:
