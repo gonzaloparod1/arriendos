@@ -4,6 +4,7 @@ from django.db.utils import IntegrityError
 from django.db import connection
 from django.db.models import Q
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 
 def crear_inmueble(nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna_cod:str, rut_propietario:str):
     comuna = Comuna.objects.get(cod=comuna_cod)
@@ -60,6 +61,9 @@ def crear_user(request, username:str, first_name:str, last_name:str, email:str, 
         )
     except IntegrityError:
         messages.error(request, 'El rut ya está ingresado')
+        return False
+    except ValidationError:
+        messages.error(request, 'El email ya existe')
         return False
     UserProfile.objects.create(
         direccion=direccion,
