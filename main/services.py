@@ -124,7 +124,7 @@ def obtener_propiedades_regiones(filtro):
 
 def cambio_password(request, password:str, password_repeat:str):
     if password != password_repeat:
-        messages.warning(request, 'Las contraseñas no coinciden')
+        messages.error(request, 'Las contraseñas no coinciden')
         return
     request.user.set_password(password)
     request.user.save()
