@@ -23,6 +23,7 @@ def crear_inmueble(nombre:str, descripcion:str, m2_construidos:int, m2_totales:i
         comuna = comuna,
         propietario = propietario
     )
+    return True
 
 def editar_inmueble(inmueble_id:int, nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna:str, rut_propietario:str):
     inmueble = Inmueble.objects.get(id=inmueble_id)

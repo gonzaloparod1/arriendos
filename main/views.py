@@ -3,7 +3,9 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import messages
-from main.services import editar_user_sin_password, cambio_password, crear_user
+from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble
+from django.contrib.auth.decorators import user_passes_test
+from main.models import Inmueble, Region, Comuna
 
 # Create your views here.
 def index(request):
@@ -68,3 +70,39 @@ def register(request):
         })
     else:
         return render(request, 'registration/register.html')
+
+# Test que solo pasan los arrendadores
+def solo_arrendadores(user):
+    return True if user.is_staff == True or user.userprofile.rol == 'arrendador' else False
+
+@login_required
+@user_passes_test(solo_arrendadores)
+def add_propiedad(request):
+    regiones = Region.objects.all()
+    comunas = Comuna.objects.all().order_by('nombre')
+    context = {
+        'tipos_inmuebles': Inmueble.inmuebles,
+        'regiones': regiones,
+        'comunas': comunas,
+    }
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        descripcion = request.POST['descripcion']
+        m2_construidos = int(request.POST['m2_construidos'])
+        m2_totales = int(request.POST['m2_totales'])
+        num_estacionamientos = int(request.POST['num_estacionamientos'])
+        num_habitaciones = int(request.POST['num_habitaciones'])
+        num_baños = int(request.POST['num_baños'])
+        direccion = request.POST['direccion']
+        precio_mensual_arriendo = int(request.POST['precio_mensual_arriendo'])
+        tipo_de_inmueble = request.POST['tipo_de_inmueble']
+        comuna_cod = request.POST['comuna_cod']
+        rut_propietario = request.user
+        crear = crear_inmueble(nombre, descripcion, m2_construidos, m2_totales, num_estacionamientos, num_habitaciones, num_baños, direccion, precio_mensual_arriendo, tipo_de_inmueble, comuna_cod, rut_propietario)
+        if crear:
+            messages.success(request, 'Propiedad ingresada con éxito')
+            return redirect('profile')
+        messages.error(request, 'Hubo un problema al crear la propiedad, favor revisar')
+        return render(request, 'add_propiedad.html', context)
+    else:
+        return render(request, 'add_propiedad.html', context)
