@@ -13,6 +13,12 @@ def index(request):
 
 @login_required
 def profile(request):
+    id_usuario = request.user.id
+    propiedades = Inmueble.objects.filter(propietario_id=id_usuario)
+    context = {
+        'propiedades': propiedades
+    }
+
     if request.method == 'POST':
         if request.POST['telefono'].strip() != '':
             username = request.user
@@ -36,7 +42,7 @@ def profile(request):
             messages.success(request, 'Ha actualizado sus datos con exito sin telefono')
             return redirect('/accounts/profile')
     else:
-        return render(request, 'profile.html')
+        return render(request, 'profile.html', context)
 
 def change_pass(request):
     password = request.POST['password']
