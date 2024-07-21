@@ -44,6 +44,11 @@ def change_pass(request):
     cambio_password(request, password, password_repeat)
     return redirect('/accounts/profile')
 
+# Test que solo pasan los no autentificados
+def solo_no_autentificado(user):
+    return not user.is_authenticated
+
+@user_passes_test(solo_no_autentificado)
 def register(request):
     if request.method == 'POST':
         username = request.POST['username']
