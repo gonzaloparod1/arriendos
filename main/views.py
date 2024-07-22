@@ -117,3 +117,17 @@ def add_propiedad(request):
         return render(request, 'add_propiedad.html', context)
     else:
         return render(request, 'add_propiedad.html', context)
+
+@login_required
+def details_propiedad(request, id):
+    id  = int(id)
+    propiedad_encontrada = None
+    propiedades = Inmueble.objects.all()
+    for propiedad in propiedades:
+        if propiedad.id == id:
+            propiedad_encontrada = propiedad
+            break
+    context = {
+        'propiedad': propiedad_encontrada
+    }
+    return render(request, 'detalles_propiedad.html', context)
