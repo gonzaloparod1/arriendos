@@ -3,7 +3,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import messages
-from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble
+from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble, editar_inmueble
 from django.contrib.auth.decorators import user_passes_test
 from main.models import Inmueble, Region, Comuna
 
@@ -131,3 +131,36 @@ def details_propiedad(request, id):
         'propiedad': propiedad_encontrada
     }
     return render(request, 'detalles_propiedad.html', context)
+
+@user_passes_test(solo_arrendadores)
+def edit_propiedad(request, id):
+    if request.method == 'GET':
+        inmueble = Inmueble.objects.get(id=id)
+        regiones = Region.objects.all()
+        comunas = Comuna.objects.all().order_by('nombre')
+        context = {
+            'inmueble': inmueble,
+            'regiones': regiones,
+            'comunas': comunas,
+        } 
+        return render(request, 'edit_propiedad.html', context)
+    else:
+        inmueble_id = id
+        nombre = request.POST['nombre']
+        descripcion = request.POST['descripcion']
+        m2_construidos = int(request.POST['m2_construidos'])
+        m2_totales = int(request.POST['m2_totales'])
+        num_estacionamientos = int(request.POST['num_estacionamientos'])
+        num_habitaciones = int(request.POST['num_habitaciones'])
+        num_baños = int(request.POST['num_baños'])
+        direccion = request.POST['direccion']
+        precio_mensual_arriendo = int(request.POST['precio_mensual_arriendo'])
+        tipo_de_inmueble = request.POST['tipo_de_inmueble']
+        comuna = request.POST['comuna_cod']
+        rut_propietario = request.user
+        editar = editar_inmueble(inmueble_id, nombre, descripcion, m2_construidos, m2_totales, num_estacionamientos, num_habitaciones, num_baños, direccion, precio_mensual_arriendo, tipo_de_inmueble, comuna, rut_propietario)
+        if editar:
+            messages.success(request, 'Propiedad editada exitosamente')
+            return redirect('profile')
+        messages.error(request, 'Hubo un problema al editar la propiedad, favor revisar')
+        return render(request, 'edit_propiedad.html', context)
