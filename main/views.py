@@ -132,10 +132,12 @@ def edit_propiedad(request, id):
         inmueble = Inmueble.objects.get(id=id)
         regiones = Region.objects.all()
         comunas = Comuna.objects.all().order_by('nombre')
+        cod_region_actual = inmueble.comuna_id[0:2]
         context = {
             'inmueble': inmueble,
             'regiones': regiones,
             'comunas': comunas,
+            'cod_region': cod_region_actual
         } 
         return render(request, 'edit_propiedad.html', context)
     else:

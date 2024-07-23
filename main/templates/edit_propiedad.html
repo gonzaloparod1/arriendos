@@ -115,7 +115,9 @@
             >
             <option value>Selecione una región</option>
             {% for region in regiones %}
-              <option value="{{ region.cod }}">{{ region.nombre }}</option>
+              <option value="{{ region.cod }}"
+              {% if region.cod == cod_region %}selected{% endif %}
+              >{{ region.nombre }}</option>
             {% endfor %}
         </select>
         </div>
