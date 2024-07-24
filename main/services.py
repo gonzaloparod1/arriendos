@@ -1,4 +1,4 @@
-from main.models import UserProfile, Inmueble, Comuna
+from main.models import UserProfile, Inmueble, Comuna, Imagen
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from django.db import connection
@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from data.sinonimos import sinomimos 
 
-def crear_inmueble(nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna_cod:str, rut_propietario:str):
+def crear_inmueble(nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna_cod:str, rut_propietario:str, imagen:object):
     comuna = Comuna.objects.get(cod=comuna_cod)
     propietario = User.objects.get(username=rut_propietario)
     Inmueble.objects.create(
@@ -22,11 +22,12 @@ def crear_inmueble(nombre:str, descripcion:str, m2_construidos:int, m2_totales:i
         precio_mensual_arriendo = precio_mensual_arriendo,
         tipo_de_inmueble = tipo_de_inmueble,
         comuna = comuna,
-        propietario = propietario
+        propietario = propietario,
+        imagen = imagen
     )
     return True
 
-def editar_inmueble(inmueble_id:int, nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna:str, rut_propietario:str):
+def editar_inmueble(inmueble_id:int, nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna:str, rut_propietario:str, imagen:object):
     inmueble = Inmueble.objects.get(id=inmueble_id)
     comuna = Comuna.objects.get(cod=comuna)
     propietario = User.objects.get(username=rut_propietario)
@@ -42,6 +43,7 @@ def editar_inmueble(inmueble_id:int, nombre:str, descripcion:str, m2_construidos
     inmueble.tipo_de_inmueble = tipo_de_inmueble
     inmueble.comuna = comuna
     inmueble.propietario = propietario
+    inmueble.imagen = imagen
     inmueble.save()
     return True
 
@@ -179,3 +181,9 @@ def buscar_propiedad(busqueda):
     elif busqueda is None:  
         return Inmueble.objects.all().order_by('comuna')
     return Inmueble.objects.filter(Q(nombre__icontains=busqueda) | Q(descripcion__icontains=busqueda) | Q(comuna__nombre__icontains=busqueda) ).order_by('comuna')
+
+def save_image(img_file:str):
+    imagen = Imagen.objects.create(
+        img_file = img_file
+    )
+    return imagen

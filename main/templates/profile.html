@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <div class="container">
 	<div class="row">
@@ -136,13 +137,30 @@
 		<div class="col-4">
 			<h4 class="text-center">Tus propiedades</h4>
 			{% for propiedad in propiedades %}
-				<div class="card mb-3" style="width: auto;">
-					<div class="card-body">
-						<h5 class="card-title">{{ propiedad.nombre }}</h5>
-						<h6 class="card-subtitle mb-2 text-body-secondary">{{ propiedad.comuna }}</h6>
-						<a href="/propiedad/detalles/{{ propiedad.id }}" class="card-link">Ver detalles</a>
-						<a href="/propiedad/edit-propiedad/{{ propiedad.id }}" class="card-link">Editar</a>
-						<a href="#" class="card-link" onclick="eliminar(event)" id="{{ propiedad.id }}">Eliminar</a> 
+				<div class="card mb-3" style="max-width: 540px;">
+					<div class="row g-0 align-items-center">
+						<div class="col-md-4">
+							<img src=
+							"
+							{% if not propiedad.imagen.img_file.url %}
+							{% static 'img/casa_ejemplo.webp' %}
+							{% else %}
+							{{ propiedad.imagen.img_file.url }}
+							{% endif %}
+							" 
+							class="img-fluid ms-2" alt="...">
+						</div>
+						<div class="col-md-8">
+							<div class="card-body">
+								<h5 class="card-title">{{ propiedad.nombre }}</h5>
+								<p class="card-text"><small class="text-body-secondary">{{ propiedad.comuna }}</small></p>
+							</div>
+							<div class="text-center">
+								<a href="/propiedad/detalles/{{ propiedad.id }}" class="card-link">Detalles</a>
+								<a href="/propiedad/edit-propiedad/{{ propiedad.id }}" class="card-link">Editar</a>
+								<a href="#" onclick="eliminar(event)" id="{{ propiedad.id }} " class="card-link" >Borrar</a>
+							</div>
+						</div>
 					</div>
 				</div>
 			{% endfor %}

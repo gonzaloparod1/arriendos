@@ -4,7 +4,15 @@
 {% block content %}
 <div class="container">
   <div class="card" style="width: 18rem;">
-    <img src="{% static 'img/casa_ejemplo.webp' %}" class="card-img-top" alt="...">
+    <img src=
+    "
+    {% if not propiedad.imagen.img_file.url %}
+    {% static 'img/casa_ejemplo.webp' %}
+    {% else %}
+    {{ propiedad.imagen.img_file.url }}
+    {% endif %}
+    "
+    class="card-img-top" alt="...">
     <div class="card-body">
       <h5 class="card-title">{{ propiedad.nombre }}</h5>
       <p class="card-text">{{ propiedad.descripcion }}</p>

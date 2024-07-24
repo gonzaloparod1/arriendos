@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
   <h3 class="text-center my-4">Editar Propiedad</h3>
-  <form action="{% url 'edit_propiedad' id=inmueble.id %}" method="post">
+  <form action="{% url 'edit_propiedad' id=inmueble.id %}" method="post" enctype="multipart/form-data">
       <div class="row">
       {% csrf_token %}
       <div class="col-4">
@@ -164,6 +164,16 @@
           </select>
         </div>
       </div>
+      <div class="mb-3">
+				<label class="form-label">Imagen:</label>
+				<input  
+						id=""
+						type="file"
+						class="form-control"
+						name="imagen"
+						required
+					>
+			</div>
       <div class="d-flex justify-content-center">
         <button type="submit" class="btn btn-sm btn-primary my-3">Editar</button>
       </div>

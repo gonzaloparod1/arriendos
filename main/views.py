@@ -3,9 +3,9 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import messages
-from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble, editar_inmueble, eliminar_inmueble, buscar_propiedad
+from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble, editar_inmueble, eliminar_inmueble, buscar_propiedad, save_image
 from django.contrib.auth.decorators import user_passes_test
-from main.models import Inmueble, Region, Comuna
+from main.models import Inmueble, Region, Comuna, Imagen
 from main.decorators import solo_propietario_staff, solo_arrendadores, solo_no_autentificado
 
 # Create your views here.
@@ -43,7 +43,14 @@ def profile(request):
             email = request.POST['email']
             direccion = request.POST['direccion']
             rol = request.POST['rol']
-            editar_user_sin_password(username, first_name, last_name, email, rol, direccion)
+            
+            if 'imagen' in request.FILES:
+                imagen = request.FILES['imagen']
+                imagen = save_image(imagen)
+            else:
+                imagen = None
+            
+            editar_user_sin_password(username, first_name, last_name, email, rol, direccion, imagen)
             messages.success(request, 'Ha actualizado sus datos con exito sin telefono')
             return redirect('/accounts/profile')
     else:
@@ -106,7 +113,14 @@ def add_propiedad(request):
         tipo_de_inmueble = request.POST['tipo_de_inmueble']
         comuna_cod = request.POST['comuna_cod']
         rut_propietario = request.user
-        crear = crear_inmueble(nombre, descripcion, m2_construidos, m2_totales, num_estacionamientos, num_habitaciones, num_baños, direccion, precio_mensual_arriendo, tipo_de_inmueble, comuna_cod, rut_propietario)
+        
+        if 'imagen' in request.FILES:
+            imagen = request.FILES['imagen']
+            imagen = save_image(imagen)
+        else:
+            imagen = None
+        
+        crear = crear_inmueble(nombre, descripcion, m2_construidos, m2_totales, num_estacionamientos, num_habitaciones, num_baños, direccion, precio_mensual_arriendo, tipo_de_inmueble, comuna_cod, rut_propietario, imagen)
         if crear:
             messages.success(request, 'Propiedad ingresada con éxito')
             return redirect('profile')
@@ -158,7 +172,14 @@ def edit_propiedad(request, id):
         tipo_de_inmueble = request.POST['tipo_de_inmueble']
         comuna = request.POST['comuna_cod']
         rut_propietario = request.user
-        editar = editar_inmueble(inmueble_id, nombre, descripcion, m2_construidos, m2_totales, num_estacionamientos, num_habitaciones, num_baños, direccion, precio_mensual_arriendo, tipo_de_inmueble, comuna, rut_propietario)
+        
+        if 'imagen' in request.FILES:
+            imagen = request.FILES['imagen']
+            imagen = save_image(imagen)
+        else:
+            imagen = None
+        
+        editar = editar_inmueble(inmueble_id, nombre, descripcion, m2_construidos, m2_totales, num_estacionamientos, num_habitaciones, num_baños, direccion, precio_mensual_arriendo, tipo_de_inmueble, comuna, rut_propietario, imagen)
         if editar:
             messages.success(request, 'Propiedad editada exitosamente')
             return redirect('profile')
