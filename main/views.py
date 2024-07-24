@@ -3,14 +3,18 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import messages
-from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble, editar_inmueble, eliminar_inmueble
+from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble, editar_inmueble, eliminar_inmueble, buscar_propiedad
 from django.contrib.auth.decorators import user_passes_test
 from main.models import Inmueble, Region, Comuna
 from main.decorators import solo_propietario_staff, solo_arrendadores, solo_no_autentificado
 
 # Create your views here.
 def index(request):
-    return render(request, 'index.html')
+    propiedades = buscar_propiedad(busqueda=None)
+    context = {
+        'propiedades': propiedades
+    }
+    return render(request, 'index.html', context)
 
 @login_required
 def profile(request):
@@ -171,3 +175,14 @@ def delete_propiedad(request, id):
     else:
         messages.error(request, 'Hubo un problema al eliminar la propiedad, favor revisar')
         return render(request, 'profile.html', context)
+
+def search_propiedad(request):
+    if request.method == 'POST':
+        busqueda = request.POST['busqueda']
+        propiedades = buscar_propiedad(busqueda)
+        context = {
+            'propiedades': propiedades
+        }
+        return render(request, 'index.html', context)
+    else:
+        return redirect('index')

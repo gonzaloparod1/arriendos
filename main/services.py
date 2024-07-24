@@ -5,6 +5,7 @@ from django.db import connection
 from django.db.models import Q
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from data.sinonimos import sinomimos 
 
 def crear_inmueble(nombre:str, descripcion:str, m2_construidos:int, m2_totales:int, num_estacionamientos:int, num_habitaciones:int, num_baños:int, direccion:str, precio_mensual_arriendo:int, tipo_de_inmueble:str, comuna_cod:str, rut_propietario:str):
     comuna = Comuna.objects.get(cod=comuna_cod)
@@ -171,3 +172,10 @@ def obtener_propiedades_regiones(filtro=None):
 # for propiedad in propiedades:
 #     print(propiedad.nombre, propiedad.descripcion, propiedad.region_nombre)
 '''
+
+def buscar_propiedad(busqueda):
+    if busqueda in sinomimos:
+        busqueda = sinomimos[busqueda]
+    elif busqueda is None:  
+        return Inmueble.objects.all().order_by('comuna')
+    return Inmueble.objects.filter(Q(nombre__icontains=busqueda) | Q(descripcion__icontains=busqueda) | Q(comuna__nombre__icontains=busqueda) ).order_by('comuna')
