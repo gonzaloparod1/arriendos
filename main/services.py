@@ -46,8 +46,8 @@ def editar_inmueble(inmueble_id:int, nombre:str, descripcion:str, m2_construidos
 
 
 def eliminar_inmueble(inmueble_id):
-    eliminar = Inmueble.objects.get(id=inmueble_id)
-    eliminar.delete()
+    Inmueble.objects.get(id=inmueble_id).delete()
+    return True
 
 def crear_user(request, username:str, first_name:str, last_name:str, email:str, password:str, pass_confirm:str, direccion:str, rol:str, telefono:str=None) -> bool:
     if password != pass_confirm:

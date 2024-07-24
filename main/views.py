@@ -3,7 +3,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import messages
-from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble, editar_inmueble
+from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble, editar_inmueble, eliminar_inmueble
 from django.contrib.auth.decorators import user_passes_test
 from main.models import Inmueble, Region, Comuna
 from main.decorators import solo_propietario_staff, solo_arrendadores, solo_no_autentificado
@@ -160,3 +160,14 @@ def edit_propiedad(request, id):
             return redirect('profile')
         messages.error(request, 'Hubo un problema al editar la propiedad, favor revisar')
         return render(request, 'edit_propiedad.html', context)
+
+@user_passes_test(solo_arrendadores)
+@solo_propietario_staff
+def delete_propiedad(request, id):
+    eliminar = eliminar_inmueble(id)
+    if eliminar:
+        messages.error(request, f'La propiedad {id} fue eliminada')
+        return redirect('profile')
+    else:
+        messages.error(request, 'Hubo un problema al eliminar la propiedad, favor revisar')
+        return render(request, 'profile.html', context)
