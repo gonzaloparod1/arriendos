@@ -1,4 +1,4 @@
-from main.models import UserProfile, Inmueble, Comuna, Imagen
+from main.models import UserProfile, Inmueble, Comuna, Imagen, Region
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from django.db import connection
@@ -187,3 +187,14 @@ def save_image(img_file:str):
         img_file = img_file
     )
     return imagen
+
+def filtro_comuna_region(comuna_cod, region_cod):
+    if comuna_cod != '':
+        comuna = Comuna.objects.get(cod=comuna_cod)
+        return Inmueble.objects.filter(comuna=comuna)
+    elif comuna_cod == '' and region_cod != '':
+        region = Region.objects.get(cod=region_cod)
+        comunas = Comuna.objects.filter(region=region)
+        return Inmueble.objects.filter(comuna__in=comunas)
+    else:
+        return Inmueble.objects.all()

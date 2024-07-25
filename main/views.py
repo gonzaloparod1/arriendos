@@ -3,16 +3,29 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import messages
-from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble, editar_inmueble, eliminar_inmueble, buscar_propiedad, save_image
+from main.services import editar_user_sin_password, cambio_password, crear_user, crear_inmueble, editar_inmueble, eliminar_inmueble, buscar_propiedad, save_image, filtro_comuna_region
 from django.contrib.auth.decorators import user_passes_test
 from main.models import Inmueble, Region, Comuna, Imagen
 from main.decorators import solo_propietario_staff, solo_arrendadores, solo_no_autentificado
 
 # Create your views here.
 def index(request):
-    propiedades = buscar_propiedad(busqueda=None)
+    propiedades = Inmueble.objects.all()
+    datos = request.GET
+    busqueda = datos.get('busqueda', '')
+    comuna_cod = datos.get('comuna_cod', '')
+    region_cod = datos.get('region_cod', '')
+    print(comuna_cod, region_cod)
+    if busqueda:
+        propiedades = buscar_propiedad(busqueda)
+    else:
+        propiedades = filtro_comuna_region(comuna_cod, region_cod)
+    comunas = Comuna.objects.all().order_by('nombre')
+    regiones = Region.objects.all()
     context = {
-        'propiedades': propiedades
+        'propiedades': propiedades,
+        'comunas': comunas,
+        'regiones': regiones,
     }
     return render(request, 'index.html', context)
 
@@ -196,14 +209,3 @@ def delete_propiedad(request, id):
     else:
         messages.error(request, 'Hubo un problema al eliminar la propiedad, favor revisar')
         return render(request, 'profile.html', context)
-
-def search_propiedad(request):
-    if request.method == 'POST':
-        busqueda = request.POST['busqueda']
-        propiedades = buscar_propiedad(busqueda)
-        context = {
-            'propiedades': propiedades
-        }
-        return render(request, 'index.html', context)
-    else:
-        return redirect('index')
