@@ -180,7 +180,21 @@ def buscar_propiedad(busqueda):
         busqueda = sinomimos[busqueda]
     elif busqueda is None:  
         return Inmueble.objects.all().order_by('comuna')
-    return Inmueble.objects.filter(Q(nombre__icontains=busqueda) | Q(descripcion__icontains=busqueda) | Q(comuna__nombre__icontains=busqueda) ).order_by('comuna')
+    
+    # Buscador por palabras
+    palabras = busqueda.split()
+    if 'en' in palabras:
+        if len(palabras) <= 2: # En caso que escriba de la forma: "en iquique"
+            comuna = palabras[1]
+            return Inmueble.objects.filter(Q(comuna__nombre__icontains=comuna))
+        else:
+            tipo_de_inmueble = palabras[0]
+            if tipo_de_inmueble in sinomimos:
+                tipo_de_inmueble = sinomimos[tipo_de_inmueble]
+            comuna = palabras[2]
+            return Inmueble.objects.filter(Q(tipo_de_inmueble__icontains=tipo_de_inmueble) & Q(comuna__nombre__icontains=comuna) ).order_by('comuna')
+    else:
+        return Inmueble.objects.filter(Q(nombre__icontains=busqueda) | Q(tipo_de_inmueble__icontains=busqueda) | Q(descripcion__icontains=busqueda) | Q(comuna__nombre__icontains=busqueda)).order_by('comuna')
 
 def save_image(img_file:str):
     imagen = Imagen.objects.create(
