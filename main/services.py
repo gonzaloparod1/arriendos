@@ -202,13 +202,23 @@ def save_image(img_file:str):
     )
     return imagen
 
-def filtro_comuna_region(comuna_cod, region_cod):
-    if comuna_cod != '':
+
+def filtro_comuna_region(comuna_cod, region_cod, tipo_inmueble):
+    query = Q() # Se crear un objeto Q vacío para acumular los filtros
+
+    if tipo_inmueble:
+        query &= Q(tipo_de_inmueble__icontains=tipo_inmueble)
+
+    if comuna_cod:
         comuna = Comuna.objects.get(cod=comuna_cod)
-        return Inmueble.objects.filter(comuna=comuna)
-    elif comuna_cod == '' and region_cod != '':
+        query &= Q(comuna=comuna)
+    elif region_cod:
         region = Region.objects.get(cod=region_cod)
         comunas = Comuna.objects.filter(region=region)
-        return Inmueble.objects.filter(comuna__in=comunas)
-    else:
+        query &= Q(comuna__in=comunas)
+
+    if not query:
         return Inmueble.objects.all()
+
+    # Si llega, se retornan los filtros acomulados
+    return Inmueble.objects.filter(query).order_by('comuna')

@@ -15,14 +15,16 @@ def index(request):
     busqueda = datos.get('busqueda', '')
     comuna_cod = datos.get('comuna_cod', '')
     region_cod = datos.get('region_cod', '')
+    tipo_inmueble = datos.get('tipo_inmueble', '')
     print(comuna_cod, region_cod)
     if busqueda:
         propiedades = buscar_propiedad(busqueda)
     else:
-        propiedades = filtro_comuna_region(comuna_cod, region_cod)
+        propiedades = filtro_comuna_region(comuna_cod, region_cod, tipo_inmueble)
     comunas = Comuna.objects.all().order_by('nombre')
     regiones = Region.objects.all()
     context = {
+        'tipos_inmuebles': Inmueble.inmuebles,
         'propiedades': propiedades,
         'comunas': comunas,
         'regiones': regiones,
