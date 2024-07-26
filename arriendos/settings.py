@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main.apps.MainConfig'
+    'main.apps.MainConfig',
+    'django.contrib.humanize'
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,5 @@ LOGOUT_REDIRECT_URL = '/accounts/login'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+USE_THOUSAND_SEPARATOR = True

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load filtros %}
 {% block content %}
 <div class="container">
   <div class="card" style="width: 18rem;">
@@ -19,7 +19,7 @@
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item">{{ propiedad.direccion}}</li>
-      <li class="list-group-item">$ {{ propiedad.precio_mensual_arriendo }}</li>
+      <li class="list-group-item">$ {{ propiedad.precio_mensual_arriendo | format_number }}</li>
     </ul>
     <div class="card-body">
       <a href="#" class="card-link">Arrendar</a>
