@@ -10,6 +10,7 @@ from main.decorators import solo_propietario_staff, solo_arrendadores, solo_no_a
 
 # Create your views here.
 def index(request):
+    hay_busqueda = False
     propiedades = Inmueble.objects.all()
     datos = request.GET
     busqueda = datos.get('busqueda', '')
@@ -23,11 +24,14 @@ def index(request):
         propiedades = filtro_comuna_region(comuna_cod, region_cod, tipo_inmueble)
     comunas = Comuna.objects.all().order_by('nombre')
     regiones = Region.objects.all()
+    if busqueda or comuna_cod or region_cod or tipo_inmueble:
+        hay_busqueda = True
     context = {
         'tipos_inmuebles': Inmueble.inmuebles,
         'propiedades': propiedades,
         'comunas': comunas,
         'regiones': regiones,
+        'hay_busqueda': hay_busqueda
     }
     return render(request, 'index.html', context)
 
