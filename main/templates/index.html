@@ -16,7 +16,11 @@
                         <select name="region_cod" id="region_cod" class="form-select">
                             <option value="">Elige la región</option>
                                 {% for region in regiones %}
-                                <option value="{{ region.cod }}">
+                                <option value="{{ region.cod }}" 
+                                {% if region.cod == region_cod_select %}
+                                selected
+                                {% endif %}
+                                >
                                     {{ region.nombre }}
                                 </option>
                                 {% endfor %}
@@ -28,7 +32,11 @@
                         <select name="comuna_cod" id="comuna_cod" class="form-select">
                             <option value="">Elige la comuna</option>
                                 {% for comuna in comunas %}
-                                    <option value="{{ comuna.cod }}">
+                                    <option value="{{ comuna.cod }}"
+                                    {% if comuna.cod == comuna_cod_select %}
+                                    selected
+                                    {% endif %}
+                                    >
                                     {{ comuna.nombre}}
                                     </option>
                                 {% endfor %}

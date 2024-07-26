@@ -27,6 +27,8 @@ def index(request):
     if busqueda or comuna_cod or region_cod or tipo_inmueble:
         hay_busqueda = True
     context = {
+        'comuna_cod_select': comuna_cod,
+        'region_cod_select': region_cod,
         'tipos_inmuebles': Inmueble.inmuebles,
         'propiedades': propiedades,
         'comunas': comunas,
