@@ -152,13 +152,8 @@ def add_propiedad(request):
 
 @login_required
 def details_propiedad(request, id):
-    id  = int(id)
-    propiedad_encontrada = None
-    propiedades = Inmueble.objects.all()
-    for propiedad in propiedades:
-        if propiedad.id == id:
-            propiedad_encontrada = propiedad
-            break
+    id_buscado  = int(id)
+    propiedad_encontrada = Inmueble.objects.get(id=id_buscado)
     context = {
         'propiedad': propiedad_encontrada
     }
