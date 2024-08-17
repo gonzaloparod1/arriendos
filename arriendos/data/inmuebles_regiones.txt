@@ -1,0 +1,3 @@
+Nombre: Apartamento Elegante || Descripción: Apartamento con acabados de lujo || Región: De Valparaíso
+Nombre: Penthouse de Lujo || Descripción: Elegante Penthouse con vista al mar || Región: Del Bíobío
+Nombre: Apartamento Elegante II || Descripción: Apartamento con acabados de lujo || Región: De Los Lagos
