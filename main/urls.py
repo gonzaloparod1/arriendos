@@ -1,5 +1,5 @@
 from django.urls import path
-from main.views import index, profile, change_pass, register, add_propiedad, details_propiedad, edit_propiedad, delete_propiedad
+from main.views import (index, profile, change_pass, register, add_propiedad, details_propiedad, edit_propiedad, delete_propiedad)
 from django.conf import settings
 from django.conf.urls.static import static
 

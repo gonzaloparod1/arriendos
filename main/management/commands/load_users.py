@@ -1,14 +1,30 @@
 import csv
 from django.core.management.base import BaseCommand
-from main.models import Comuna
 from main.services import crear_user
 
-# Se ejecuta usando python manage.py test_client
-
 class Command(BaseCommand):
+    help = 'Carga usuarios desde un archivo CSV'
+
     def handle(self, *args, **kwargs):
-        archivo = open('data/users.csv', 'r')
-        reader = csv.reader(archivo, delimiter=';')
-        next(reader) # Se salta la primera linea
-        for fila in reader:
-            crear_user(fila[0], fila[1], fila[2], fila[3], fila[4], fila[5], fila[6])
+        with open('data/users.csv', 'r') as archivo:
+            reader = csv.reader(archivo, delimiter=';')
+            next(reader)  # Se salta la primera línea (cabeceras)
+
+            for fila in reader:
+                try:
+                    crear_user(
+                        username=fila[0],
+                        first_name=fila[1],
+                        last_name=fila[2],
+                        email=fila[3],
+                        password=fila[4],
+                        password_confirm=fila[5],
+                        direccion=fila[6],
+                        rol=fila[7],
+                        telefono=[8],
+                    )
+                    self.stdout.write(self.style.SUCCESS(f'Usuario {fila[1]} {fila[2]} creado correctamente'))
+                except ValueError as e:
+                    self.stdout.write(self.style.WARNING(f'Advertencia: {e} - Usuario {fila[1]} {fila[2]} ya existe, ignorando.'))
+                except Exception as e:
+                    self.stdout.write(self.style.ERROR(f'Error al crear usuario {fila[1]} {fila[2]}: {e}'))

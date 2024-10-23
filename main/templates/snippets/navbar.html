@@ -1,7 +1,11 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg bg-body-light mb-3">
 		<div class="container d-flex flex-wrap">
-			<a class="navbar-brand" href="/"><img class="img-logo" src="{% static 'img/logo.jpg' %}" alt="Logo arriendos"></a>
+			<a class="navbar-brand" href="/">
+				<div class="logo-container">
+					<img class="img-logo" src="{% static 'img/logo.jpg' %}" alt="Logo arriendos">
+				</div>
+			</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>

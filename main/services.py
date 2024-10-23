@@ -52,32 +52,42 @@ def eliminar_inmueble(inmueble_id):
     Inmueble.objects.get(id=inmueble_id).delete()
     return True
 
-def crear_user(request, username:str, first_name:str, last_name:str, email:str, password:str, pass_confirm:str, direccion:str, rol:str, telefono:str=None) -> bool:
-    if password != pass_confirm:
-        messages.error(request, 'Las contraseñas no coinciden')
-        return False
-    try:
-        user = User.objects.create_user(
-            username,
-            email,
-            password,
-            first_name=first_name,
-            last_name=last_name,
-        )
-    except IntegrityError:
-        messages.error(request, 'El rut ya está ingresado')
-        return False
-    except ValidationError:
-        messages.error(request, 'El email ya existe')
-        return False
-    UserProfile.objects.create(
-        direccion=direccion,
-        telefono_personal=telefono,
-        rol = rol,
-        user=user
+from django.contrib.auth.models import User
+from main.models import UserProfile
+
+def crear_user(username, first_name, last_name, email, password, password_confirm, direccion, rol, telefono):
+    # Verificar si las contraseñas coinciden
+    if password != password_confirm:
+        raise ValueError("Las contraseñas no coinciden")
+    
+    # Verificar si el nombre de usuario ya existe
+    if User.objects.filter(username=username).exists():
+        raise ValueError("El nombre de usuario ya está en uso")
+    
+    # Verificar si el correo electrónico ya está registrado
+    if User.objects.filter(email=email).exists():
+        raise ValueError("El correo electrónico ya está en uso")
+    
+    # Crear el usuario
+    user = User.objects.create_user(
+        username=username,
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+        password=password
     )
-    messages.success(request, 'Usuario creado con éxito! Por favor, ingrese')
-    return True
+    
+    # Solo crear el UserProfile si no existe
+    UserProfile.objects.get_or_create(
+        user=user, 
+        defaults={
+            'direccion': direccion,
+            'rol': rol,
+            'telefono_personal': telefono
+        }
+    )
+
+    return user
 
 def editar_user(username:str, first_name:str, last_name:str, email:str, password:str, pass_confirm:str, direccion:str, telefono:str=None):
     # 1. Nos traemos el user y modificamos sus datos
@@ -222,3 +232,8 @@ def filtro_comuna_region(comuna_cod, region_cod, tipo_inmueble):
 
     # Si llega, se retornan los filtros acomulados
     return Inmueble.objects.filter(query).order_by('comuna')
+
+def obtener_perfil_usuario(user):
+    # Intentar obtener el perfil de usuario, crearlo si no existe
+    profile, created = UserProfile.objects.get_or_create(user=user)
+    return profile

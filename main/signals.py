@@ -1,9 +1,13 @@
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
-from django.db.models.signals import pre_save
-from django.core.exceptions import ValidationError
 from django.dispatch import receiver
+from main.models import UserProfile
 
-@receiver(pre_save, sender=User)
-def ensure_unique_email(sender, instance, **kwargs):
-    if User.objects.filter(email=instance.email).exclude(pk=instance.pk).exists():
-        raise ValidationError('The email already exists in the database.')
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.get_or_create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.userprofile.save()
